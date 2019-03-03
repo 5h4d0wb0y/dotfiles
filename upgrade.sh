@@ -26,7 +26,7 @@ cd $PWD
 read -p "Would you like to push it? [y/N]" choice
 if [[ $choice =~ ^[Yy]$ ]]; then
     git commit -am "misc: general refactoring"
-    git push origin master
+    git push # origin master
 else
     echo -n "You have chosen not to push anything!"
 fi
