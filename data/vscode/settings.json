@@ -1,0 +1,8 @@
+{
+    "go.gopath": "/home/sh4d0wb0y/gocode",
+    "php.executablePath": "php",
+    "C_Cpp.clang_format_path": "clang-format",
+    "ruby.codeCompletion": "rcodetools",
+    "ruby.useBundler": true,
+    "window.zoomLevel": 0
+}
