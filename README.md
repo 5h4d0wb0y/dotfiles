@@ -7,7 +7,7 @@ My lovely dotfiles :heart:. Works on **Linux**.
 
 Clone repo inside `~/.dotfiles`, running:
 
-    git clone https://github.com/5h4d0wb0y/dotfiles.git ~/.dotfiles
+    git clone --recursive https://github.com/5h4d0wb0y/dotfiles.git ~/.dotfiles
 
 Move to folder `~/.dotfiles`, launch the installer script running `./install.sh`.
 
