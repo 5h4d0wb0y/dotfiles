@@ -60,16 +60,16 @@ yellow=$(tput setaf 3)
 bold=$(tput bold)
 norm=$(tput sgr0)
 
-function print_info(msg){
-    echo -e "${green}✔${norm} ${bold}$msg${norm}..."
+function print_info(){
+    echo -e "${green}✔${norm} ${bold}$1${norm}..."
 }
 
-function print_warn(msg){
-    echo -e "${yellow}!${norm} ${bold}$msg${norm}..."
+function print_warn(){
+    echo -e "${yellow}!${norm} ${bold}$1${norm}..."
 }
 
-function print_err(msg){
-    echo -e "${red}✖${norm} ${bold}$msg${norm}..."
+function print_err(){
+    echo -e "${red}✖${norm} ${bold}$1${norm}..."
 }
 
 
@@ -78,14 +78,14 @@ function print_err(msg){
 #
 
 # Add Repository
-print_info("Adding repository...")
+print_info "Adding repository..."
 for ppa in "${PPAS[@]}"
 do
     sudo add-apt-repository --yes --update ppa:$ppa
 done
 
 # Update System
-print_info("Updating system...")
+print_info "Updating system..."
 sudo apt clean
 sudo apt update
 sudo apt upgrade -y
@@ -93,13 +93,13 @@ sudo apt full-upgrade -y
 sudo apt install -y ${PACKAGES[*]}
 
 # VSCode Key & Repository
-print_info("Installing vscode key & repository...")
+print_info "Installing vscode key & repository..."
 curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
 sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
 sudo echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
 
 ## Install dotnet
-print_info("Installing microsoft key & repository...")
+print_info "Installing microsoft key & repository..."
 sudo apt-key adv --keyserver packages.microsoft.com --recv-keys EB3E94ADBE1229CF
 sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893
 sudo echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-bionic-prod bionic main" > /etc/apt/sources.list.d/dotnetdev.list
@@ -117,7 +117,7 @@ sudo apt install -y dotnet
 # Install Android SDK, NDK & Studio
 sudo mkdir -p /opt/google
 if [ ! -d "/opt/google/android-studio" ]; then
-    print_info("Installing Android Studio...")
+    print_info "Installing Android Studio..."
     wget https://dl.google.com/dl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-linux.zip -P /tmp
     sudo unzip /tmp/android-studio-ide-181.5056338-linux.zip -d /opt/google
     #wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -P /tmp
@@ -132,39 +132,39 @@ if [ ! -d "/opt/google/android-studio" ]; then
 fi
 
 # Install Keybase
-print_info("Downloading keybase")
+print_info "Downloading keybase"
 wget https://prerelease.keybase.io/keybase_amd64.deb -O /tmp
-print_info("Installing keybase")
+print_info "Installing keybase"
 sudo dpkg -i /tmp/keybase_amd64.deb
 sudo apt-get install -f
 rm -rf /tmp/keybase_amd64.deb
 
 # Install Terraform
-print_info("Downloading terraform")
+print_info "Downloading terraform"
 #terraform_url=$(curl https://releases.hashicorp.com/index.json | jq '{terraform}' | egrep "linux.*amd64" | sort --version-sort -r | head -1 | awk -F[\"] '{print $4}')
 terraform_url="https://releases.hashicorp.com/terraform/$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r -M '.current_version')/terraform_$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r -M '.current_version')_linux_amd64.zip"
 #curl -o terraform.zip $terraform_url
 wget $terraform_url -O /tmp
-print_info("Installing terraform")
+print_info "Installing terraform"
 sudo unzip /tmp/terraform*.zip -d /usr/local/bin
 rm -rf /tmp/terraform*.zip
 
 # Install Packer
-#print_info("Downloading packer")
+#print_info "Downloading packer"
 #packer_url=$(curl https://releases.hashicorp.com/index.json | jq '{packer}' | egrep "linux.*amd64" | sort --version-sort -r | head -1 | awk -F[\"] '{print $4}')
 #curl -o packer.zip $packer_url
-#print_info("Installing packer")
+#print_info "Installing packer"
 #sudo unzip packer.zip -d /usr/bin
 
 # Install docker
-#print_info("Installing docker")
+#print_info "Installing docker"
 #curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 #sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 #sudo apt-cache policy docker-ce
 #sudo apt install -y docker-ce
 
 # Launch Commands
-print_info("Launching some commands shell")
+print_info "Launching some commands shell"
 for cmd in "${COMMANDS[@]}"
 do
     $cmd
@@ -173,7 +173,7 @@ done
 # Link Data files
 for file in data/*
 do
-    print_info("Linking $file to ${bold}~/.$(basename $file)${norm}")
+    print_info "Linking $file to ${bold}~/.$(basename $file)${norm}"
     rm -rf ~/.$(basename $file)
     ln -s $(pwd)/$file ~/.$(basename $file)
 done
@@ -182,7 +182,7 @@ done
 mkdir -p ~/gocode/
 
 # Configure Git
-print_info("Setting up git config")
+print_info "Setting up git config"
 if [ -z $GIT_USER ]; then
     read -p "${yellow}!${norm} ${bold}Insert your git user:${norm} " $GIT_USER
 fi
@@ -200,7 +200,7 @@ git config --global color.branch auto
 # Install VSCode Extensions
 code -v > /dev/null
 if [[ $? -eq 0 ]];then
-    print_info("Installing vscode extensions")
+    print_info "Installing vscode extensions"
     code --install-extension bbenoist.vagrant
     code --install-extension felixfbecker.php-intellisense
     code --install-extension mauve.terraform
